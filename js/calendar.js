@@ -60,3 +60,20 @@ function createNewEventDiv() {
     return outerDiv;
 }
 
+function completeEvent() {
+    const array = Calendar.getEvents();
+    for (let i = 0; i < array.length; i++) {
+            array[i].setProp('classNames', ['completed']);
+            array[i].setProp('editable', false);
+    }
+
+    strikeThrough();
+}
+
+function strikeThrough(){
+    var element = document.getElementsByClassName('fc-event-title');
+    for(let i = 0; i < element.length; i++){
+        element[i].classList.add("completed");
+        console.log(element[i]);
+    }
+}
