@@ -3,11 +3,9 @@ header, nav, .row {
 }
 
 #add_img {
-    height: 5%;
-    width: 5%;
-    padding-top: 5px;
-    margin-left: auto;
-    margin-right: auto;
+    height: 100%;
+    width: 6%;
+    float: right;
 }
 
 #collection, #collection:hover {
@@ -17,4 +15,10 @@ header, nav, .row {
 #notebook_details {
     height: 500px; /* Change height property to percentage after putting things in it */
     background-color: rgb(219, 219, 219);
+}
+
+#stand-in {
+    text-align: center;
+    text-decoration: underline;
+    padding-top: 1%;
 }

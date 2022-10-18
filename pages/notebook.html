@@ -45,16 +45,24 @@
     <!-- Main content of Notebook page. Contains all Notebooks and their respective Notes -->
     <div class="row">
         <div class="col-sm-4 list-group list-group-flush" id="nav_notebooks">
-            <a id="collection" class="list-group-item list-group-item-success"><b>Notebooks</b></a>
-            <a id="notebook" class="list-group-item list-group-item-action" onclick="addNotebook()">Note 1</a>
-            <!-- addNotebook() not working. Maybe add an outder <div> to each <a>? -->
-            <img id="add_img" src="../Images/Img_Add_Notebook.png" alt="Add Notebook" role="button" onclick="" />
-            <!-- Set up onclick for adding notebooks -->
+            <div id="collection" class="list-group-item list-group-item-success">
+                <b>Notebooks</b>
+                <img id="add_img" src="../Images/Img_Add_Notebook.png" alt="Add Notebook" role="button" onclick="addNotebook()"/>
+                <!-- <div>
+                    
+                    <img id="add_img" src="../Images/Img_Add_Notebook.png" alt="Add Notebook" role="button" onclick="addNotebook()"/>
+                </div> -->
+            </div>
+                        
+            <a id="notebook" class="list-group-item list-group-item-action">Note 1</a>            
+            <!-- Each notebook needs an onclick="showNotebook()" -->
+                            
         </div>
 
         <div class="col-sm-8" id="notebook_details">
             <div class="container-fluid ">
                 <!-- Use flexbox for the different Notes -->
+                <div id="stand-in"><b>Notebook Display</b></div>
             </div>
         </div>
     </div>
