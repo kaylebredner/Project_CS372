@@ -40,24 +40,50 @@ body {
 #par{
     padding-top:0.5em;
     padding-bottom:1em;
+    display:flex;
+    align-items: center;
+    align-content: center;
 }
 
 #event-img{
-    height:30px;
-    width:30px;
-    margin-right: 0.5em;
-    margin-top: 0.4em;
+    height:20%;
+    width:20%;
     float:right;
     display:flex;
+    margin-left:5%;
+    margin-right:5%;
+}
+
+#option-img{
+    height:30%;
+    width:10%;
+    display: inline-block;
+}
+
+#option-img:hover{
+    cursor:pointer;
 }
 
 #event-img:hover{
     cursor: pointer;
 }
 
-#eventelement{
+#event-element{
+    width:80%;
     padding-top:1.8em;
     padding-left:1em;
+    display: inline-block;
+    overflow: hidden;
+}
+
+#event-container{
+    align-items: center;
+    align-content: center;
+}
+
+#add-event-menu{
+    display:flex;
+    width:100%;
 }
 
 .completed .fc-event-title{

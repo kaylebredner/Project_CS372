@@ -49,25 +49,12 @@
 
     <!--Assignment Bar, left.-->
     <div id='external-events'>
-        <p id="par">
-            <strong>Draggable Events</strong>
-            <img id="event-img" alt="add event button" src="./images/Img_Add_Notebook.png" onclick="eventMenu()" role="button" />
-        </p>
-        <div class='fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event'>
-            <div id="eventelement" class='fc-event-main'>My Event 1</div>
-        </div>
-        <div class='fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event'>
-            <div id="eventelement" class='fc-event-main'>My Event 2</div>
-        </div>
-        <div class='fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event'>
-            <div id="eventelement" class='fc-event-main'>My Event 3</div>
-        </div>
-        <div class='fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event'>
-            <div id="eventelement" class='fc-event-main'>My Event 4</div>
-        </div>
-        <div class='fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event'>
-            <div id="eventelement" class='fc-event-main'>My Event 5</div>
-        </div>           
+        <div id="par">
+            <select id="add-event-menu" name="event-menu">
+                <option value="-1">[New Event]</option>
+            </select>
+            <img id="event-img" alt="add event button" src="../images/Img_Add_Notebook.png" onclick="appendEvent()" role="button" />
+        </div>   
     </div>
     
     <!--Calendar-->
