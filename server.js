@@ -1,7 +1,6 @@
 const express = require('express')
 const bodyParser = require('body-parser')
 const path = require('path')
-const https = require('https');
 const { reset } = require('nodemon');
 
 let app = express()
@@ -12,21 +11,29 @@ let authenticated = true;
 
 app.get('/', (req, res) => {
 
-    if (//not authenticated
-        !authenticated) {
-        res.status(200).sendFile(path.join(__dirname, "/pages/login.html"))
-    } //authenticated
-    else {
+    if (authenticated) {
         res.status(200).sendFile(path.join(__dirname, "/pages/dashboard.html"))
+    }
+    else {
+        res.status(200).sendFile(path.join(__dirname, "/pages/login.html"))
     }
 })
 
 app.get('/calendar', (req, res) => {
-    res.status(200).sendFile(path.join(__dirname, "/pages/calendar.html"))
+
+    if (authenticated) {
+        res.status(200).sendFile(path.join(__dirname, "/pages/calendar.html"))
+    } else {
+        res.status(200).redirect("/")
+    }
 })
 
 app.get('/notes', (req, res) => {
-    res.status(200).sendFile(path.join(__dirname, "/pages/notebook.html"))
+    if (authenticated) {
+        res.status(200).sendFile(path.join(__dirname, "/pages/notebook.html"))
+    } else {
+        res.status(200).redirect("/")
+    }
 })
 
 app.get('/signup', (req, res) => {
