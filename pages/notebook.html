@@ -36,7 +36,7 @@
                     <a class="nav-link active" href="./notebook">Notebooks</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="./settings"">Settings</a>
+                    <a class="nav-link active" href="./settings">Settings</a>
                 </li>
             </ul>
         </div>
@@ -52,13 +52,22 @@
                         
             <a id="notebook" class="list-group-item list-group-item-action">Note 1</a>            
             <!-- Each notebook needs an onclick="showNotebook()" -->
+            <!-- Each notebook also needs a ondoubleclick() to rename -->
                             
         </div>
 
         <div class="col-sm-8" id="notebook_details">
             <div class="container-fluid ">
                 <!-- Use flexbox for the different Notes -->
-                <div id="stand-in"><b>Notebook Display</b></div>
+                <div id="display-title"><b>Notes</b></div>
+
+                <div class="thumbnail-container">
+                    <div class="note-thumbnail">
+                        <img src="../images/notepad_clipart.png" class="note-image" alt="Note">
+                        <br/>
+                        <span class="note-label">Add Note</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

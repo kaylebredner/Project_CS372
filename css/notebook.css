@@ -1,4 +1,10 @@
-header, nav, .row {
+* {
+    box-sizing: border-box;
+}
+
+header,
+nav,
+.row {
     margin: 10px;
 }
 
@@ -8,17 +14,41 @@ header, nav, .row {
     float: right;
 }
 
-#collection, #collection:hover {
+#collection,
+#collection:hover {
     color: rgb(59, 86, 237);
 }
 
 #notebook_details {
-    height: 500px; /* Change height property to percentage after putting things in it */
+    height: 500px;
+    /* Change height property to percentage after putting things in it */
     background-color: rgb(219, 219, 219);
 }
 
-#stand-in {
+#display-title {
     text-align: center;
-    text-decoration: underline;
+    /* text-decoration: underline; */
     padding-top: 1%;
+    margin-bottom: 2%;
+}
+
+.thumbnail-container {
+    display: flex;
+    flex-flow: row wrap;
+    margin: 10px;
+}
+
+.thumbnail-container > div {
+    width: 100px;
+    margin: 10px;
+}
+
+.note-image {
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.note-label {
+    text-align: center;
 }
