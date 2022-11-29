@@ -1,5 +1,10 @@
-* {
+* { 
     box-sizing: border-box;
+    font-family: sans-serif;
+}
+
+body {
+    margin: 0;
 }
 
 header,
@@ -8,10 +13,20 @@ nav,
     margin: 10px;
 }
 
-#add_img {
-    height: 100%;
-    width: 6%;
+.add-note {
+    width: 10%;
     float: right;
+    border: none;
+    outline: none;
+    font-size: 25px;
+    cursor: pointer;
+    background: rgba(0, 0, 0, 0);
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.add-note:hover {
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 0.25em;
 }
 
 #collection,
@@ -19,15 +34,82 @@ nav,
     color: rgb(59, 86, 237);
 }
 
-#notebook_details {
+.notes-list {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    overflow-y: auto;
+}
+
+.notes-list-item {
+    cursor: pointer;
+    margin-top: 0.25em;
+    margin-bottom: 0.25em;
+    padding: 0.25em;
+    border-radius: 0.5em;
+    width: 100%;
+}
+
+.notes-list-item-selected {
+    background: rgb(228, 228, 228);
+}
+
+.notes-list-item:hover {
+    background: rgba(219, 219, 219, 0.5);
+}
+
+.note-small-title {
+    font-weight: bold;
+}
+
+.note-small-body {
+    padding-left: 1em;
+    font-style: italic;
+    font-weight: lighter;
+    width: 25em;
+}
+
+.note-small-updated {
+    padding-right: 1em;
+    text-align: right;
+    font-style: italic;
+    color: grey;
+}
+
+.notes-preview {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    padding: 0.5em 0.5em;
+    border-left: 1px solid rgb(0, 0, 0);
+}
+
+.note-title, .note-body {
+    border: none;
+    outline: none;
+    width: 100%;
+    padding: 0.5em;
+}
+
+.note-title {
+    font-weight: bold;
+    font-size: 2em;
+}
+
+.note-body {
+    flex-grow: 1;
+    resize: none;
+    min-height: 400px;
+}
+
+/* The following is CSS styling for the alternate notes display I was working on. I haven't decided what to do with it yet */
+/* #notebook_details {
     height: 500px;
-    /* Change height property to percentage after putting things in it */
     background-color: rgb(219, 219, 219);
 }
 
 #display-title {
     text-align: center;
-    /* text-decoration: underline; */
     padding-top: 1%;
     margin-bottom: 2%;
 }
@@ -38,9 +120,10 @@ nav,
     margin: 10px;
 }
 
-.thumbnail-container > div {
+.note-thumbnail {
     width: 100px;
     margin: 10px;
+    border: none;
 }
 
 .note-image {
@@ -51,4 +134,4 @@ nav,
 
 .note-label {
     text-align: center;
-}
+} */
