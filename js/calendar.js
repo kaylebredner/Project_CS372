@@ -23,7 +23,8 @@ function init() {
                         title: eventEl.innerText,
                         editable: true,
                         extendedProps: {
-                            completed: false
+                            completed: false,
+                            id: null
                         },
                         classNames: ["calendarevent"]
                     }
@@ -39,8 +40,12 @@ function init() {
                 },
                 editable: true,
                 droppable: true,
-                drop: function (info) {
-
+                timeZone: 'none',
+                eventChange: function(info){
+                    createNewEvent(info.event._def.title, info.event._instance.range.start, info.event._instance.range.end)
+                },
+                eventReceive: function (info){
+                    createNewEvent(info.event._def.title, info.event._instance.range.start, info.event._instance.range.end)
                 },
                 eventClick: function (info) {
                     info.jsEvent.preventDefault()
@@ -56,23 +61,31 @@ function appendEvent() {
     var eventDiv = document.getElementById("external-events")
     var selector = document.getElementById("add-event-menu")
 
-    
-    eventDiv.append(createNewEventDiv(selector[selector.selectedIndex]))
+    eventDiv.append(createNewEventDiv(selector))
 }
 
 function createNewEventDiv(option) {
     let outerDiv = document.createElement('div')
     let innerDiv = document.createElement('div')
     let image = document.createElement('img')
-    let noteName = option.text
+    let noteName = option[option.selectedIndex].text
+    let newopt = document.createElement('option')
 
-    console.log(option.value)
-    if(option.value === "-1"){
+    if(option[option.selectedIndex].value === "-2" || option[option.selectedIndex].value === "-3" || option[option.selectedIndex].value === "-4") return "";
+    if(option[option.selectedIndex].value === "-1"){
         noteName = prompt("Please enter a name for your new event.")
-
+        
         if(document.getElementById("save-note-box").checked){ 
             createNewNote(noteName)
+            option.append(newopt)
             alert("A blank note has been created for you!")
+        }else{
+            let child = option.firstChild
+        while(child.value != -2){
+            child = child.nextSibling
+        }
+
+        option.insertBefore(newopt, child)
         }
     }
 
@@ -88,6 +101,9 @@ function createNewEventDiv(option) {
     innerDiv.append(document.createTextNode(noteName))
     
     outerDiv.className = "fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event"
+
+    newopt.value = noteName
+    newopt.append(document.createTextNode(noteName))
 
     outerDiv.append(innerDiv)
     outerDiv.append(image)
@@ -216,6 +232,14 @@ function fillNoteList(){
         option.text = null//grab note name from DB
         selector.append(option)
     }
+}
+
+function createNewEvent(atitle, astart, aend){
+    Calendar.addEvent({
+        title: atitle,
+        start: astart,
+        end: aend
+    })
 }
 
 function createNewNote(){

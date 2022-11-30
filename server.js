@@ -25,7 +25,7 @@ app.get('/calendar', (req, res) => {
         res.status(200).sendFile(path.join(__dirname, "/pages/calendar.html"))
     } else {
         res.status(200).redirect("/")
-    }no
+    }
 })
 
 app.get('/notes', (req, res) => {

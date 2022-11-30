@@ -51,12 +51,14 @@
     <div id='external-events'>
         <div id="par">
             <select id="add-event-menu" name="event-menu" onclick="toggleCheckBox()">
-                <option value="-1">[New Event]</option>
-                <option value="1">Disable</option>
+                <option value="-1">[Create New Event]</option>
+                <option value="-4"></option>
+                <option value="-3">==Events==</option>
+                <option value="-2">==Notes==</option>
             </select>
-            <img id="event-img" alt="add event button" src="../images/Img_Add_Notebook.png" onclick="appendEvent()" role="button" />
+            <img id="event-img" alt="add event button" src="../images/Img_Add_Notebook.png" onclick="return appendEvent()" role="button" />
         </div>   
-        <input type="checkbox" id="save-note-box"> Save as new note?
+        <label><input type="checkbox" id="save-note-box">Save as new note?</label>
     </div>
     
     <!--Calendar-->
