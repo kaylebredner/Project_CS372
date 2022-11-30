@@ -9,9 +9,9 @@
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="../css/notebook.css" rel="stylesheet">
-    <link href="../css/navbar.css" rel="stylesheet">
+    <link href="../css/nav.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../js/notebook.js"></script>
+    <!-- <script src="../js/notebook.js"></script> -->
 </head>
 
 <body>
@@ -36,33 +36,34 @@
                     <a class="nav-link active" href="./notebook">Notebooks</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="./settings"">Settings</a>
+                    <a class="nav-link active" href="./settings">Settings</a>
                 </li>
             </ul>
         </div>
     </nav>
 
     <!-- Main content of Notebook page. Contains all Notebooks and their respective Notes -->
-    <div class="row">
-        <div class="col-sm-4 list-group list-group-flush" id="nav_notebooks">
-            <div id="collection" class="list-group-item list-group-item-success">
-                <b>Notebooks</b>
-                <img id="add_img" src="../Images/Img_Add_Notebook.png" alt="Add Notebook" role="button" onclick="addNotebook()"/>
-            </div>
-                        
-            <a id="notebook" class="list-group-item list-group-item-action">Note 1</a>            
-            <!-- Each notebook needs an onclick="showNotebook()" -->
-                            
-        </div>
-
+    <div class="row" id="app">
+        <!-- Alternate notes preview. Still haven't figured out if I should fit it in somewhere or not -->
+        <!--         
         <div class="col-sm-8" id="notebook_details">
             <div class="container-fluid ">
-                <!-- Use flexbox for the different Notes -->
-                <div id="stand-in"><b>Notebook Display</b></div>
+                
+                <div id="display-title"><b>Notes</b></div>
+
+                <div class="thumbnail-container">
+                    <div class="note-thumbnail">
+                        <img src="../images/notepad_clipart.png" class="note-image" alt="Note">
+                        <br />
+                        <span class="note-label">Add Note</span>
+                    </div>
+                    <button class="add-note" type="button">+</button>
+                </div>
             </div>
-        </div>
+        </div> -->
     </div>
 
+    <script src="../js/notesMain.js" type="module" defer></script>
     <!-- Add footer? -->
 </body>
 
