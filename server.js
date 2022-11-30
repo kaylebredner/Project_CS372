@@ -46,8 +46,8 @@ app.get('/signout', (req, res) => {
     res.status(200).redirect("/")
 })
 
-app.post('/', (req, res) => {
-
+app.post('/', (_, res) => {
+    res.status(200).redirect("/")
 })
 
 app.listen(8080)
