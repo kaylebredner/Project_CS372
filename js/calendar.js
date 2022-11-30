@@ -68,10 +68,12 @@ function createNewEventDiv(option) {
 
     console.log(option.value)
     if(option.value === "-1"){
-        console.log("new")
-        noteName = prompt("Please enter a name for your new note.")
-        alert("A blank note has been created for you!")
-        createNewNote(noteName)
+        noteName = prompt("Please enter a name for your new event.")
+
+        if(document.getElementById("save-note-box").checked){ 
+            createNewNote(noteName)
+            alert("A blank note has been created for you!")
+        }
     }
 
     image.id = "option-img"
@@ -90,6 +92,16 @@ function createNewEventDiv(option) {
     outerDiv.append(innerDiv)
     outerDiv.append(image)
     return outerDiv
+}
+
+function toggleCheckBox(){
+    let selector = document.getElementById("add-event-menu")
+    if(selector[selector.selectedIndex].value != -1){
+        document.getElementById("save-note-box").disabled = true
+        document.getElementById("save-note-box").checked = false
+    }else{
+        document.getElementById("save-note-box").disabled = false
+    }
 }
 
 function completeEvent(info) {
@@ -207,7 +219,7 @@ function fillNoteList(){
 }
 
 function createNewNote(){
-    //add a note to the db for this user
+    //send request to the server to save the note
 }
 
 function removeCalendarNote(elem){

@@ -107,3 +107,7 @@ body {
 .menuItem-close{
     background-color:rgb(128, 226, 128);
 }
+
+#save-note-box{
+    margin-left: 5px;
+}
