@@ -78,36 +78,30 @@ function toggleCheckBox() {
 }
 
 function appendEvent() {
-    var eventDiv = document.getElementById("external-events")
-    var selector = document.getElementById("add-event-menu")
+    let eventDiv = document.getElementById("external-events")
+    let selector = document.getElementById("add-event-menu")
+    let notename = selector[selector.selectedIndex].text
 
-    eventDiv.append(createNewEventDiv(selector))
+    if (selector[selector.selectedIndex].value === "-2" || selector[selector.selectedIndex].value === "-3" || selector[selector.selectedIndex].value === "-4") return "";
+    if (selector[selector.selectedIndex].value === "-1") {
+        noteName = prompt("Please enter a name for your new event.")
+        addMenuItem(selector, notename)
+    }
+
+    elements = document.getElementsByClassName('event-element')
+    for(let i = 0; i < elements.length; i++){
+        if(elements[i].innerText === notename) return
+    }
+
+    eventDiv.append(createNewEventDiv(notename))
 }
 
-function createNewEventDiv(option) {
+function createNewEventDiv(name) {
     let outerDiv = document.createElement('div')
     let innerDiv = document.createElement('div')
     let image = document.createElement('img')
-    let noteName = option[option.selectedIndex].text
-    let newopt = document.createElement('option')
-
-    if (option[option.selectedIndex].value === "-2" || option[option.selectedIndex].value === "-3" || option[option.selectedIndex].value === "-4") return "";
-    if (option[option.selectedIndex].value === "-1") {
-        noteName = prompt("Please enter a name for your new event.")
-
-        if (document.getElementById("save-note-box").checked) {
-            createNewNote(noteName)
-            option.append(newopt)
-            alert("A blank note has been created for you!")
-        } else {
-            let child = option.firstChild
-            while (child.value != -2) {
-                child = child.nextSibling
-            }
-
-            option.insertBefore(newopt, child)
-        }
-    }
+    let noteName = name
+    
 
     image.id = "option-img"
     image.alt = "remove event button"
@@ -116,19 +110,35 @@ function createNewEventDiv(option) {
         removeContextMenu(image.parentElement)
     })
 
-    innerDiv.className = "fc-event-main"
-    innerDiv.id = "event-element"
-    innerDiv.append(document.createTextNode(noteName))
+    innerDiv.className = "fc-event-main event-element"
+    innerDiv.innerText = noteName
 
     outerDiv.className = "fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event"
-
-    newopt.value = noteName
-    newopt.append(document.createTextNode(noteName))
 
     outerDiv.append(innerDiv)
     outerDiv.append(image)
     return outerDiv
 }
+
+function addMenuItem(option, noteName){
+    let newopt = document.createElement('option')
+
+    newopt.value = noteName
+    newopt.append(document.createTextNode(noteName))
+
+    if (document.getElementById("save-note-box").checked) {
+        createNewNote(noteName)
+        option.append(newopt)
+        alert("A blank note has been created for you!")
+    } else {
+        let child = option.firstChild
+        while (child.value != -2) {
+            child = child.nextSibling
+        }
+
+        option.insertBefore(newopt, child)
+    }
+} 
 
 //On Calendar interactions
 function removeContextMenu(element) {
@@ -292,18 +302,14 @@ function fillEventList() {
         if (xhttp.readyState === 4 && xhttp.status === 200) {
             allEvents = JSON.parse(xhttp.response)
             selector = document.getElementById("add-event-menu")
-
+            
             for (let i = 0; i < allEvents.length; i++) {
                 let option = document.createElement("option")
                 option.value = allEvents[i].title
                 option.text = allEvents[i].title
 
-                let child = selector.firstChild
-                while (child.value != -2) {
-                    child = child.nextSibling
-                }
-
-                selector.insertBefore(option, child)
+                document.getElementById("external-events").append(createNewEventDiv(allEvents[i].title))
+                addMenuItem(selector, allEvents[i].title)
 
                 Calendar.addEvent({
                     title: allEvents[i].title,

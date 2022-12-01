@@ -69,7 +69,7 @@ body {
     cursor: pointer;
 }
 
-#event-element{
+.event-element{
     width:90%;
     padding-top:1.8em;
     padding-left:1em;
@@ -114,6 +114,14 @@ body {
 
 .form-check-input{
     margin-right: 5px;
+    margin-bottom: 20px;
+    width: 20px;
+    height: 20px;
+}
+
+.form-check-label{
+    margin-top: 1px;
+    font-size: 18px;
 }
 
 .calendar-selector{

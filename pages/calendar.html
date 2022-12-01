@@ -50,7 +50,7 @@
     <!--Assignment Bar, left.-->
     <div id='external-events'>
         <div id="par">
-            <select class="form-select form-select-md mb-1 calendar-selector" aria-label=".form-select-sm example" id="add-event-menu" name="event-menu" onclick="toggleCheckBox()">
+            <select class="form-select form-select-md calendar-selector" id="add-event-menu" name="event-menu" onclick="toggleCheckBox()">
                 <option value="-1">[Create New Event]</option>
                 <option value="-4"></option>
                 <option value="-3">==Events==</option>
@@ -59,7 +59,8 @@
             <img id="event-img" alt="add event button" src="../images/Img_Add_Notebook.png"
                 onclick="return appendEvent()" role="button" />
         </div>
-        <label class="form-check-label"><input class="form-check-input" type="checkbox" id="save-note-box">Save as new note?</label>
+            <input class="form-check-input" type="checkbox" id="save-note-box">
+            <label class="form-check-label">Save as new note?</label>
     </div>
 
     <!--Calendar-->
