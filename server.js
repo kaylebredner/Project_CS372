@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 const{ Schema } = mongoose;
 const moment = require('moment');
 
-mongoose.connect('')
+mongoose.connect('mongodb+srv://alex:alex@cluster0.gr3zesx.mongodb.net/test')
 
 //model for 'LoginInfo' table
 var userModel = mongoose.model('LoginInfo', new Schema({
@@ -17,17 +17,32 @@ var userModel = mongoose.model('LoginInfo', new Schema({
    authenticateTime: String
 }), 'LoginInfo');
 
+var eventModel = mongoose.model('Events', new Schema({
+    username: String,
+    title: String,
+    start: String,
+    end: String,
+ }), 'Events');
+
+var noteModel = mongoose.model('Notes', new Schema({
+    title: String,
+    start: String,
+    end: String,
+}), 'Notes');
+
 let app = express()
 
 app.use(express.static(path.join(__dirname, "./")))
 app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.text())
+app.use(bodyParser.json())
 //this won't work for multiple users, once one user is authenticated it will read true for all users
 let authenticated = true;
 
-app.get('/', (req, res) => {
+app.get('/', (_, res) => {
 
     if (authenticated) {
-        res.status(200).sendFile(path.join(__dirname, "/pages/dashboard.html"))
+        res.status(200).sendFile(path.join(__dirname, "/pages/notebook.html"))
     }
     else {
         res.status(200).sendFile(path.join(__dirname, "/pages/login.html"))
@@ -54,8 +69,6 @@ app.post('/signUp', (req, res) => {
             res.status(200).send("User already exists");
         }
     })
-    console.log(user);
-    
 })
 
 //finds user by username/email and checks password against what is stored in db, responds with user token, pass this token into other requests to ensure user is logged in
@@ -69,7 +82,8 @@ app.post('/login', (req, res) => {
     userModel.findOne({'userName':userName},function(err, user){
         if (err) return
         if(pw === user.password){
-            authenticated = true;
+            sessionStorage.setItem("authenticated", true)
+            sessionStorage.setItem("planner-username", userName)
             user.authenticated = 1;
             user.authenticateTime = now
             user.save();
@@ -84,7 +98,38 @@ app.post('/login', (req, res) => {
     })
 })
 
-app.get('/calendar', (req, res) => {
+app.post('/fillnotes', (req, res) => {
+
+})
+
+app.post('/fillevents', (req, res) => {
+    const username = req.body
+    eventModel.find({"username" : username}, (err, ent) =>{
+        if(err) return
+        res.status(200).send(JSON.stringify(ent))
+    })
+})
+
+app.post('/createnote', (req, res) => {
+
+})
+
+app.post('/createvent', (req, res) => {
+    const request = JSON.parse(req.body)
+
+    eventModel.collection.insertOne({
+        username: request.username,
+        title: request.title,
+        start: request.start,
+        end: request.end
+    })
+})
+
+app.post('/', (_, res) => {
+    res.status(200).redirect("/")
+})
+
+app.get('/calendar', (_, res) => {
 
     if (authenticated) {
         res.status(200).sendFile(path.join(__dirname, "/pages/calendar.html"))
@@ -93,7 +138,7 @@ app.get('/calendar', (req, res) => {
     }
 })
 
-app.get('/notes', (req, res) => {
+app.get('/notes', (_, res) => {
     if (authenticated) {
         res.status(200).sendFile(path.join(__dirname, "/pages/notebook.html"))
     } else {
@@ -101,17 +146,13 @@ app.get('/notes', (req, res) => {
     }
 })
 
-app.get('/signup', (req, res) => {
+app.get('/signup', (_, res) => {
     res.status(200).sendFile(path.join(__dirname, "/pages/signup.html"))
 })
 
-app.get('/signout', (req, res) => {
+app.get('/signout', (_, res) => {
     //unauthenticate
     authenticated = false
-    res.status(200).redirect("/")
-})
-
-app.post('/', (_, res) => {
     res.status(200).redirect("/")
 })
 

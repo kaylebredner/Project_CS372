@@ -4,5 +4,7 @@ function validate(){
     if(document.forms.signUp.pass.value!==document.forms.signUp.confPass.value){
         return false
     }
+
+    localStorage.setItem("planner-username", document.forms.signUp.user);
     return true
 }

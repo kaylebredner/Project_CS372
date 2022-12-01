@@ -2,13 +2,19 @@ let Calendar
 let Draggable = FullCalendar.Draggable
 let elementClicked
 
+//init functions
 function init() {
+    sessionStorage.setItem("planner-username", "max")
+    //The calendar menu was not functioning properly with onClick so this is being used to get the cursor x and y
     document.addEventListener('mousemove', e => {
-       elementClicked = e
+        elementClicked = e
     })
 
-    fillNoteList()
+    //Populate the drop down menu with notes and events from database
+    //fillNoteList()
+    fillEventList()
 
+    //Initialize drag and drop (from FullCalendar)
     document.addEventListener('DOMContentLoaded',
         function () {
             var containerEl = document.getElementById('external-events')
@@ -31,7 +37,7 @@ function init() {
                 }
             })
 
-            //initialize calendar
+            //initialize calendar (from FullCalendar)
             Calendar = new FullCalendar.Calendar(calendarEl, {
                 headerToolbar: {
                     left: 'prev next today',
@@ -41,12 +47,15 @@ function init() {
                 editable: true,
                 droppable: true,
                 timeZone: 'none',
-                eventChange: function(info){
+                //This detects when the user moves/extends an event in one of the view and updates it in the database
+                eventChange: function (info) {
                     createNewEvent(info.event._def.title, info.event._instance.range.start, info.event._instance.range.end)
                 },
-                eventReceive: function (info){
+                //This detects when the user drops an event on to the calendar and makes a new entry into the database if it doesn't exist already
+                eventReceive: function (info) {
                     createNewEvent(info.event._def.title, info.event._instance.range.start, info.event._instance.range.end)
                 },
+                //This is to open the menu to delete/complete tasks
                 eventClick: function (info) {
                     info.jsEvent.preventDefault()
                     openContextMenu(info, "calendar")
@@ -55,6 +64,17 @@ function init() {
 
             Calendar.render()
         })
+}
+
+//Interactations with left event menu
+function toggleCheckBox() {
+    let selector = document.getElementById("add-event-menu")
+    if (selector[selector.selectedIndex].value != -1) {
+        document.getElementById("save-note-box").disabled = true
+        document.getElementById("save-note-box").checked = false
+    } else {
+        document.getElementById("save-note-box").disabled = false
+    }
 }
 
 function appendEvent() {
@@ -71,21 +91,21 @@ function createNewEventDiv(option) {
     let noteName = option[option.selectedIndex].text
     let newopt = document.createElement('option')
 
-    if(option[option.selectedIndex].value === "-2" || option[option.selectedIndex].value === "-3" || option[option.selectedIndex].value === "-4") return "";
-    if(option[option.selectedIndex].value === "-1"){
+    if (option[option.selectedIndex].value === "-2" || option[option.selectedIndex].value === "-3" || option[option.selectedIndex].value === "-4") return "";
+    if (option[option.selectedIndex].value === "-1") {
         noteName = prompt("Please enter a name for your new event.")
-        
-        if(document.getElementById("save-note-box").checked){ 
+
+        if (document.getElementById("save-note-box").checked) {
             createNewNote(noteName)
             option.append(newopt)
             alert("A blank note has been created for you!")
-        }else{
+        } else {
             let child = option.firstChild
-        while(child.value != -2){
-            child = child.nextSibling
-        }
+            while (child.value != -2) {
+                child = child.nextSibling
+            }
 
-        option.insertBefore(newopt, child)
+            option.insertBefore(newopt, child)
         }
     }
 
@@ -93,13 +113,13 @@ function createNewEventDiv(option) {
     image.alt = "remove event button"
     image.src = "../images/trashcan.png"
     image.addEventListener('click', function () {
-        removeCalendarNote(image)
+        removeContextMenu(image.parentElement)
     })
 
     innerDiv.className = "fc-event-main"
     innerDiv.id = "event-element"
     innerDiv.append(document.createTextNode(noteName))
-    
+
     outerDiv.className = "fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event"
 
     newopt.value = noteName
@@ -110,14 +130,16 @@ function createNewEventDiv(option) {
     return outerDiv
 }
 
-function toggleCheckBox(){
-    let selector = document.getElementById("add-event-menu")
-    if(selector[selector.selectedIndex].value != -1){
-        document.getElementById("save-note-box").disabled = true
-        document.getElementById("save-note-box").checked = false
-    }else{
-        document.getElementById("save-note-box").disabled = false
+//On Calendar interactions
+function removeContextMenu(element) {
+    let child = element.lastElementChild
+    while (child) {
+        element.removeChild(child)
+        child = element.lastElementChild
     }
+
+    element.parentElement.classList.remove("menuEnabled")
+    element.remove()
 }
 
 function completeEvent(info) {
@@ -132,22 +154,11 @@ function deleteEvent(info) {
     return false
 }
 
-function removeEventMenu(element) {
-    let child = element.lastElementChild
-    while (child) {
-        element.removeChild(child)
-        child = element.lastElementChild
-    }
-
-    element.parentElement.classList.remove("menuEnabled")
-    element.remove()
-}
-
 function openContextMenu(info, menuName) {
     let element = document.elementFromPoint(elementClicked.clientX, elementClicked.clientY)
 
     element = element.parentElement
-    
+
     if (!element.classList.contains("menuEnabled") && !element.classList.contains("menuItem")) {
 
         element.classList.add("menuEnabled")
@@ -163,53 +174,53 @@ function openContextMenu(info, menuName) {
         canc.classList.add("menuItem-close")
         canc.innerText = "Close"
         canc.addEventListener('click', function () {
-            removeEventMenu(main)
+            removeContextMenu(main)
         })
 
         //build context menu
         let menuItems = getMenuInfo(menuName, info)
-        for(let i = 0; i < menuItems.numItems; i++){
+        for (let i = 0; i < menuItems.numItems; i++) {
             let item = document.createElement('div')
 
-            if(menuItems.useParent(item)){
+            if (menuItems.useParent(item)) {
                 item = item.parentElement
             }
 
-            for(let j = 0; j < menuItems.numClassNames; j++){
+            for (let j = 0; j < menuItems.numClassNames; j++) {
                 item.classList.add(menuItems.className[j])
             }
 
             item.classList.add("menuItem")
             item.innerText = menuItems.itemNames[i]
-            item.addEventListener('click', function(){
+            item.addEventListener('click', function () {
                 menuItems.functionNames[i](info)
-                removeEventMenu(main)
+                removeContextMenu(main)
             })
 
             main.append(item)
         }
-        
+
         main.append(canc)
     }
 }
 
-function getMenuInfo(menuName, info){
+function getMenuInfo(menuName, info) {
     const menu = {
         numItems: 0,
         numClassNames: 0,
         itemNames: [],
         className: [],
         functionNames: [],
-        useParent: function(elem){return false}
+        useParent: function (elem) { return false }
     }
 
-    switch(menuName){
+    switch (menuName) {
         case "calendar":
             menu.numItems = 2
             menu.numClassNames = 0
             menu.itemNames = ["Complete", "Delete"]
-            menu.functionNames = [function(){completeEvent(info)}, function(){deleteEvent(info)}]
-            menu.useParent = function(elem){
+            menu.functionNames = [function () { completeEvent(info) }, function () { deleteEvent(info) }]
+            menu.useParent = function (elem) {
                 if (elem.classList.contains("fc-event-title")) {
                     return true
                 }
@@ -222,11 +233,49 @@ function getMenuInfo(menuName, info){
     return menu
 }
 
-function fillNoteList(){
+//Interact with database
+function createNewEvent(atitle, astart, aend) {
+    const event = {
+        username: sessionStorage.getItem("planner-username"),
+        title: atitle,
+        start: astart,
+        end: aend
+    }
+
+    const xhttp = new XMLHttpRequest();
+    xhttp.open("POST", "http://localhost:8080/createvent", true)
+    xhttp.send(JSON.stringify(event))
+}
+
+function createNewNote() {
+    const xhttp = new XMLHttpRequest();
+    const selector = document.getElementById("add-event-menu")
+
+    let payload = {
+        username: sessionStorage.getItem("planner-username"),
+        noteName: selector[selector.selectedIndex.value]
+    }
+
+    xhttp.open("POST", "http://localhost:8080/createnote", true)
+    xhttp.send(payload)
+}
+
+//Pulls all of the users notes from the DB and puts them in th drop down list if they want to put them on the calendar
+function fillNoteList() {
     let allNotes = null//fetch list of notes
     let selector = document.getElementById("add-event-menu")
 
-    for(let i = 0; i < allNotes; i++){
+    const xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+        if (xhttp.readyState === 4 && xhttp.status === 200) {
+            allNotes = xhttps.response
+        }
+    }
+
+    xhttp.open("POST", "http://localhost:8080/fillnotes", true)
+    xhttp.send(sessionStorage.getItem("planner-username"))
+
+    for (let i = 0; i < allNotes; i++) {
         let option = document.createElement("option")
         option.value = null//grab note ID from DB
         option.text = null//grab note name from DB
@@ -234,18 +283,38 @@ function fillNoteList(){
     }
 }
 
-function createNewEvent(atitle, astart, aend){
-    Calendar.addEvent({
-        title: atitle,
-        start: astart,
-        end: aend
-    })
-}
+function fillEventList() {
+    let allEvents;//fetch list of notes
+    let selector;
 
-function createNewNote(){
-    //send request to the server to save the note
-}
+    const xhttp = new XMLHttpRequest();
+    xhttp.onreadystatechange = function () {
+        if (xhttp.readyState === 4 && xhttp.status === 200) {
+            allEvents = JSON.parse(xhttp.response)
+            selector = document.getElementById("add-event-menu")
 
-function removeCalendarNote(elem){
-    removeEventMenu(elem.parentElement)
+            for (let i = 0; i < allEvents.length; i++) {
+                let option = document.createElement("option")
+                option.value = allEvents[i].title
+                option.text = allEvents[i].title
+
+                let child = selector.firstChild
+                while (child.value != -2) {
+                    child = child.nextSibling
+                }
+
+                selector.insertBefore(option, child)
+
+                Calendar.addEvent({
+                    title: allEvents[i].title,
+                    start: new Date(allEvents[i].start),
+                    end: new Date(allEvents[i].end),
+                    allDay: (new Date(allEvents[i].start).toTimeString() === new Date(allEvents[i].end).toTimeString())
+                })
+            }
+        }
+    }
+
+    xhttp.open("POST", "http://localhost:8080/fillevents", true)
+    xhttp.send(sessionStorage.getItem("planner-username"))
 }

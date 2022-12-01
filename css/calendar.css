@@ -111,3 +111,11 @@ body {
 #save-note-box{
     margin-left: 5px;
 }
+
+.form-check-input{
+    margin-right: 5px;
+}
+
+.calendar-selector{
+    margin-left: 5px;
+}
