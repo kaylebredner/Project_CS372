@@ -83,7 +83,9 @@ export default class NotesView {
         notesListContainer.innerHTML = ""
 
         // Debugging
-        console.log(notes)
+        for (let i = 0; i < notes.length; i++ ) {
+            console.log(notes[i])
+        }
 
         // Insert HTML for notes
         for (const note of notes) {

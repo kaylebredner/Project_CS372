@@ -11,8 +11,8 @@ export default class NotesApp {
         this._refreshNotes()
     }
 
-    _refreshNotes() { // Called whenever a note is added, edited, or deleted, and updated the view
-        const notes = NotesAPI.getAllNotes()
+    async _refreshNotes() { // Called whenever a note is added, edited, or deleted, and updated the view
+        const notes = NotesAPI.getAllNotes() // Returning undefined. Use promise?
 
         this._setNotes(notes)
 

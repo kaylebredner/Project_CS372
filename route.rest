@@ -1,0 +1,13 @@
+GET http://localhost:8080/get_notes
+
+###
+
+POST http://localhost:8080/save_notes
+Content-Type: application/json
+
+{
+    "id": 1234,
+    "title": "New Note",
+    "body": "Changed Body...",
+    "updated": "Sat, 03 Dec 2022 02:40:37 GMT"
+}

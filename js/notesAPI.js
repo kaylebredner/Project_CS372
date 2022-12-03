@@ -9,13 +9,11 @@ export default class NotesAPI {
         $.ajax({
             url: "/get_notes",
             type: "GET",
-            success: async function (result) {
+            success: function (result) {
 
-                // Check the contents of result. Make sure it's an array of note objects or json data
-                console.log(result)
-
-                const notes = JSON.parse(result)
-                return await notes.sort((a, b) => { // Return list sorted by updated date
+                const notes = result
+                // return result
+                return notes.sort((a, b) => { // Return list sorted by updated date
                     return new Date(a.updated) > new Date(b.updated) ? -1 : 1
                 })
             },
