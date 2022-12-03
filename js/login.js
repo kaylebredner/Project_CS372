@@ -15,6 +15,7 @@
             document.getElementById('result').innerHTML=''
             success = true;
             window.location.href = '/dashboard/'+userName
+            sessionStorage.setItem("planner-username", userName)
         },
         statusCode: {
             401: function(data){

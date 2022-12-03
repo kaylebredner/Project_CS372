@@ -4,7 +4,6 @@ let elementClicked
 
 //init functions
 function init() {
-    sessionStorage.setItem("planner-username", "max")
     //The calendar menu was not functioning properly with onClick so this is being used to get the cursor x and y
     document.addEventListener('mousemove', e => {
         elementClicked = e
@@ -81,18 +80,19 @@ function appendEvent() {
     let eventDiv = document.getElementById("external-events")
     let selector = document.getElementById("add-event-menu")
     let notename = selector[selector.selectedIndex].text
+    let itemExists = false;
 
     if (selector[selector.selectedIndex].value === "-2" || selector[selector.selectedIndex].value === "-3" || selector[selector.selectedIndex].value === "-4") return "";
     if (selector[selector.selectedIndex].value === "-1") {
-        noteName = prompt("Please enter a name for your new event.")
-        addMenuItem(selector, notename)
+        notename = prompt("Please enter a name for your new event.")
+        for(let j = 0; j < selector.length; j++) {if(selector[j] === notename) itemExists = true}
+        if(!itemExists) addMenuItem(selector, notename)
     }
 
     elements = document.getElementsByClassName('event-element')
     for(let i = 0; i < elements.length; i++){
         if(elements[i].innerText === notename) return
     }
-
     eventDiv.append(createNewEventDiv(notename))
 }
 
@@ -101,7 +101,6 @@ function createNewEventDiv(name) {
     let innerDiv = document.createElement('div')
     let image = document.createElement('img')
     let noteName = name
-    
 
     image.id = "option-img"
     image.alt = "remove event button"
