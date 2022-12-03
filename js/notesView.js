@@ -17,7 +17,7 @@ export default class NotesView {
         this.root.innerHTML = `
             <div class="col-sm-4 list-group list-group-flush notes-sidebar" id="nav_notebooks">
                 <div id="collection" class="list-group-item list-group-item-success">
-                    <b>Notebooks</b>
+                    <b>Notes</b>
                     <button class="add-note" type="button">+</button>
                 </div>
 
@@ -81,6 +81,9 @@ export default class NotesView {
 
         // Empty the list
         notesListContainer.innerHTML = ""
+
+        // Debugging
+        console.log(notes)
 
         // Insert HTML for notes
         for (const note of notes) {

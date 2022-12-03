@@ -25,12 +25,10 @@ function createNewNotebook() {
 
 function renameNotebook() {
     // Toggle editable for element
-    console.log("dblclick works")
     return false;
 }
 
 function showNotebook() {
     // Change notebook display using notes retrieved from database
-    console.log("onclick works")
     return false;
 }
