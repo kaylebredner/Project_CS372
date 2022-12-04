@@ -4,7 +4,8 @@ function getData() {
         url: '/eventsAmount/' + username,
         success: function(data) {
             const finalString = `You have ${data} events scheduled!`
-            Document.getElementByID('eventString').innerHTML = finalString
+            console.log(finalString)
+            document.getElementById('eventString').innerHTML=finalString
         }
     })
 } // end getData
