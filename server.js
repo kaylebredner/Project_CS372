@@ -109,14 +109,6 @@ app.post('/login', (req, res) => {
     })
 })
 
-app.get('/calendar', (req, res) => {
-    if (authenticated) {
-        res.status(200).sendFile(path.join(__dirname, "/pages/calendar.html"))
-    } else {
-        res.status(200).redirect("/")
-    }
-})
-
 app.post('/fillnotes', (req, res) => {
     const username = req.body
     notesModel.find({ "username": username }, (err, ent) => {
@@ -173,12 +165,34 @@ app.post('/deleteevent', (req, res) => {
     eventModel.collection.findOneAndDelete({"username":request.username, "title":request.title})
 })
 
-app.get('/notes', (req, res) => {
-    if (authenticated) {
-        res.status(200).sendFile(path.join(__dirname, "/pages/notebook.html"))
-    } else {
-        res.status(200).redirect("/")
-    }
+app.get('/calendar/:user', (req, res) => {
+
+    new Promise((resolve, reject)=> {
+        resolve(isAuthenticated(req.params.user));
+    }).then((value)=>{
+        console.log(value)
+        if (value) {
+            res.status(200).sendFile(path.join(__dirname, "/pages/calendar.html"))
+        }
+        else {
+            res.status(401).sendFile(path.join(__dirname, "/pages/login.html"))
+        }
+    })
+})
+
+app.get('/notes/:user', (req, res) => {
+
+    new Promise((resolve, reject)=> {
+        resolve(isAuthenticated(req.params.user));
+    }).then((value)=>{
+        console.log(value)
+        if (value) {
+            res.status(200).sendFile(path.join(__dirname, "/pages/notebook.html"))
+        }
+        else {
+            res.status(401).sendFile(path.join(__dirname, "/pages/login.html"))
+        }
+    })
 })
 
 app.get('/signup', (req, res) => {

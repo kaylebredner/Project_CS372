@@ -18,6 +18,7 @@ function validate(){
     success: function(data){
         console.log(data)
         document.getElementById('result').innerHTML=''
+        sessionStorage.setItem("planner-username", data)
        window.location.href = '/dashboard/'+userName
     },
     statusCode: {

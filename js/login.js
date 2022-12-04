@@ -13,8 +13,8 @@
         success: function(data){
             document.getElementById('result').innerHTML=''
             success = true;
-            window.location.href = '/dashboard'
-            sessionStorage.setItem("planner-username", userName)
+            sessionStorage.setItem("planner-username", data)
+            window.location.href = '/dashboard/'+userName
         },
         statusCode: {
             401: function(data){
