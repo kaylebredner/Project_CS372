@@ -45,23 +45,30 @@ body {
     align-content: center;
 }
 
-#event-img{
+.event-img{
     height:7%;
     width:7%;
     float:right;
     display:flex;
-    margin-left:5%;
-    margin-right:5%;
+    margin-left:3%;
+    margin-right:2%;
 }
 
-#option-img{
+.option-img{
     height:50%;
     width:5%;
-    margin-bottom:1%;
+    margin-bottom:2.5%;
     display: inline-block;
 }
 
-#option-img:hover{
+.notes-img{
+    height:50%;
+    width:5%;
+    margin-left:-12%;
+    display: inline-block;
+}
+
+.option-img:hover{
     cursor:pointer;
 }
 

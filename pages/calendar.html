@@ -14,6 +14,7 @@
     <link href="../css/notebook.css" rel="stylesheet">
 
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="./js/calendar.js"></script>
 
@@ -50,17 +51,20 @@
     <!--Assignment Bar, left.-->
     <div id='external-events'>
         <div id="par">
-            <select class="form-select form-select-md calendar-selector" id="add-event-menu" name="event-menu" onclick="toggleCheckBox()">
+            <select class="form-select form-select-md calendar-selector" id="add-event-menu" name="event-menu"
+                onclick="toggleCheckBox()">
                 <option value="-1">[Create New Event]</option>
                 <option value="-4"></option>
                 <option value="-3">==Events==</option>
                 <option value="-2">==Notes==</option>
             </select>
-            <img id="event-img" alt="add event button" src="../images/Img_Add_Notebook.png"
+            <img class="event-img" alt="add event button" src="../images/Img_Add_Notebook.png"
                 onclick="return appendEvent()" role="button" />
+            <img class="event-img" alt="add event button" src="../images/trashcan.png"
+                onclick="return deleteEventFromDB()" role="button" />
         </div>
-            <input class="form-check-input" type="checkbox" id="save-note-box">
-            <label class="form-check-label">Save as new note?</label>
+        <input class="form-check-input" type="checkbox" id="save-note-box" checked="false">
+        <label class="form-check-label">Save as new note?</label>
     </div>
 
     <!--Calendar-->

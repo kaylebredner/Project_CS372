@@ -26,13 +26,13 @@ const eventModel = mongoose.model('Events', new Schema({
 }), 'Events');
 
 
-const notesModel = mongoose.model('Notes', new Schema({
+const notesModel = mongoose.model('notes', new Schema({
     username: String,
     id: Number,
     title: String,
     body: String,
     updated: Date,
-}), 'Notes');
+}), 'notes');
 
 let app = express()
 
@@ -133,7 +133,7 @@ app.post('/fillevents', (req, res) => {
     })
 })
 
-app.post('/createnote', (req, res) => {
+app.post('/createnoteevent', (req, res) => {
     const request = JSON.parse(req.body)
 
     notesModel.collection.insertOne({
@@ -141,19 +141,36 @@ app.post('/createnote', (req, res) => {
         id: request.id,
         title: request.title,
         body: request.body,
-        updated: request.updated,
+        updated: new Date(request.updated),
     })
 })
 
 app.post('/createvent', (req, res) => {
     const request = JSON.parse(req.body)
+    
 
-    eventModel.collection.insertOne({
-        username: request.username,
-        title: request.title,
-        start: request.start,
-        end: request.end
+    eventModel.find({ "username": request.username }, (err, ent) => {
+        for(let i = 0; i < ent.length; i++){
+            
+            if(ent[i].username === request.username && ent[i].title === request.title){
+                eventModel.collection.findOneAndUpdate({"username":request.username, "title":request.title}, {$set:{"start": request.start, "end":request.end}})
+                return;
+            }
+        }
+
+        eventModel.collection.insertOne({
+            username: request.username,
+            title: request.title,
+            start: request.start,
+            end: request.end
+        })
     })
+})
+
+app.post('/deleteevent', (req, res) => {
+    const request = JSON.parse(req.body)
+
+    eventModel.collection.findOneAndDelete({"username":request.username, "title":request.title})
 })
 
 app.get('/notes', (req, res) => {
