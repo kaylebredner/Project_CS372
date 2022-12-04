@@ -10,10 +10,11 @@
     <link rel="stylesheet" href="css/homepage.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+    <script type="text/javascript" src="../js/dashboard.js"></script>
 </head>
 
 
-<body>
+<body onload="getData()">
     <!--Added Navigation Bar to the top of the Dashboard page-->
     <nav class="navbar navbar-expand-sm bg-primary navbar-dark" id="main_navbar">
         <div class="container-fluid">
@@ -46,7 +47,7 @@
                         src="../images/calendar.gif" alt="Calendar Thumbnail">
 
                     <div class="card-body">
-                        <p class="card-text" style="text-align: center; font-size: 24pt;">
+                        <p class="card-text" style="text-align: center; font-size: 24pt;" id="eventString">
                             You have NUM events scheduled!
                             <!--Will retrieve number of events and update innerHTML with up-to-date count of events-->
                         </p>

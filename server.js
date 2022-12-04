@@ -17,6 +17,13 @@ var userModel = mongoose.model('LoginInfo', new Schema({
    authenticateTime: String
 }), 'LoginInfo');
 
+var eventModel = mongoose.model('Events', new Schema({
+    username: String,
+    title: String,
+    start: String,
+    end: String,
+ }), 'Events');
+
 let app = express()
 
 app.use(express.static(path.join(__dirname, "./")))
@@ -96,6 +103,16 @@ app.post('/login', (req, res) => {
             console.log('incorrect password')
             res.status(401).send('incorrect password');
         }
+    })
+})
+
+app.get('/eventsAmount/:user', (req, res) => {
+    const username = req.params.user
+
+    eventModel.find({'username':username}, function(err, data){
+        if (err) return
+
+        res.status(200).send(`${data.length}`)
     })
 })
 
