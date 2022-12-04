@@ -6,7 +6,7 @@ const mongoose = require('mongoose');
 const{ Schema } = mongoose;
 const moment = require('moment');
 
-mongoose.connect('')
+mongoose.connect('mongodb+srv://alex:alex@cluster0.gr3zesx.mongodb.net/test')
 
 //model for 'LoginInfo' table
 var userModel = mongoose.model('LoginInfo', new Schema({
