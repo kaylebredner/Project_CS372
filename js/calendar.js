@@ -10,7 +10,7 @@ function init() {
     })
 
     //Populate the drop down menu with notes and events from database
-    //fillNoteList()
+    fillNoteList()
     fillEventList()
 
     //Initialize drag and drop (from FullCalendar)
@@ -86,13 +86,16 @@ function appendEvent() {
     if (selector[selector.selectedIndex].value === "-1") {
         notename = prompt("Please enter a name for your new event.")
         for(let j = 0; j < selector.length; j++) {if(selector[j] === notename) itemExists = true}
-        if(!itemExists) addMenuItem(selector, notename)
+        if(!itemExists) addMenuItem(selector, notename, document.getElementById("save-note-box").checked)
     }
 
     elements = document.getElementsByClassName('event-element')
     for(let i = 0; i < elements.length; i++){
         if(elements[i].innerText === notename) return
     }
+
+    if(document.getElementById("save-note-box").checked) createNewNote(notename)
+
     eventDiv.append(createNewEventDiv(notename))
 }
 
@@ -119,16 +122,14 @@ function createNewEventDiv(name) {
     return outerDiv
 }
 
-function addMenuItem(option, noteName){
+function addMenuItem(option, noteName, checked){
     let newopt = document.createElement('option')
 
     newopt.value = noteName
     newopt.append(document.createTextNode(noteName))
 
-    if (document.getElementById("save-note-box").checked) {
-        createNewNote(noteName)
+    if (checked) {
         option.append(newopt)
-        alert("A blank note has been created for you!")
     } else {
         let child = option.firstChild
         while (child.value != -2) {
@@ -256,17 +257,19 @@ function createNewEvent(atitle, astart, aend) {
     xhttp.send(JSON.stringify(event))
 }
 
-function createNewNote() {
+function createNewNote(noteName) {
     const xhttp = new XMLHttpRequest();
-    const selector = document.getElementById("add-event-menu")
 
-    let payload = {
+    let note = {
         username: sessionStorage.getItem("planner-username"),
-        noteName: selector[selector.selectedIndex.value]
+        id: Math.floor(Math.random() * 1000000),
+        title: noteName,
+        body: "",
+        updated: Date.now()
     }
 
     xhttp.open("POST", "http://localhost:8080/createnote", true)
-    xhttp.send(payload)
+    xhttp.send(JSON.stringify(note))
 }
 
 //Pulls all of the users notes from the DB and puts them in th drop down list if they want to put them on the calendar
@@ -277,19 +280,21 @@ function fillNoteList() {
     const xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function () {
         if (xhttp.readyState === 4 && xhttp.status === 200) {
-            allNotes = xhttps.response
+            allNotes = JSON.parse(xhttp.response)
+            selector = document.getElementById("add-event-menu")
+            
+            for (let i = 0; i < allNotes.length; i++) {
+                let option = document.createElement("option")
+                option.value = allNotes[i].title
+                option.text = allNotes[i].title
+
+                addMenuItem(selector, allNotes[i].title, true)
+            }
         }
     }
 
     xhttp.open("POST", "http://localhost:8080/fillnotes", true)
     xhttp.send(sessionStorage.getItem("planner-username"))
-
-    for (let i = 0; i < allNotes; i++) {
-        let option = document.createElement("option")
-        option.value = null//grab note ID from DB
-        option.text = null//grab note name from DB
-        selector.append(option)
-    }
 }
 
 function fillEventList() {
@@ -297,6 +302,7 @@ function fillEventList() {
     let selector;
 
     const xhttp = new XMLHttpRequest();
+    
     xhttp.onreadystatechange = function () {
         if (xhttp.readyState === 4 && xhttp.status === 200) {
             allEvents = JSON.parse(xhttp.response)
@@ -308,7 +314,7 @@ function fillEventList() {
                 option.text = allEvents[i].title
 
                 document.getElementById("external-events").append(createNewEventDiv(allEvents[i].title))
-                addMenuItem(selector, allEvents[i].title)
+                addMenuItem(selector, allEvents[i].title, false)
 
                 Calendar.addEvent({
                     title: allEvents[i].title,
