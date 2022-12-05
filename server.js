@@ -8,13 +8,14 @@ const moment = require('moment');
 
 // Schema for Notes
 const noteSchema = new mongoose.Schema({
+    username: String,
     id: Number,
     title: String,
     body: String,
     updated: Date
 })
 
-mongoose.connect('mongodb+srv://alex:alex@cluster0.gr3zesx.mongodb.net/test')
+mongoose.connect('mongodb+srv://alex:alex@cluster0.gr3zesx.mongodb.net/StudentPlanner')
 
 // Model for 'LoginInfo' table
 var userModel = mongoose.model('LoginInfo', new Schema({
@@ -77,23 +78,42 @@ app.get('/get_notes', async function (req, res) {
 })
 
 function getNotes() { // Helper function to get all notes stored in the database
-    const notes = NotesM.find({})
+    const notes = NotesM.find()
     return notes
 }
 
 // Get list of notes from page and save to DB
-app.post('/save_notes', function (req, res) {
+app.post('/save_note', async function (req, res) {
     // Save posted info into new Note
-    const notes = {
-        id: req.body.id,
-        updated: req.body.updated,
-        title: req.body.title,
-        body: req.body.body
+    const note = JSON.parse(req.body)
+
+    // Check if note exists in collection. Update if it exists and add to collection if it doesn't
+    const existingNote = await NotesM.findOne({id: note.id})
+    if (existingNote) { // Note already exists
+        
+        existingNote.title = note.title
+        existingNote.body = note.body
+        existingNote.updated = note.updated
+        await existingNote.save()
+    } else { // Create new note
+        
+        const newNote = await NotesM.create({
+            id: note.id,
+            title: note.title,
+            body: note.body,
+            updated: note.updated
+        })
     }
 
-    // Create note in database
-    NotesM.create(notes) // TODO: Check if new note is created when updating
     res.status(200).send("Note created!")
+})
+
+app.post('/delete_note', async function (req, res) {
+    
+    const note = JSON.parse(req.body)
+    const conf = await NotesM.findOneAndDelete({id: note.id})
+    
+    res.status(200).send("Note deleted!")
 })
 
 //finds user by username/email and checks password against what is stored in db, responds with user token, pass this token into other requests to ensure user is logged in
