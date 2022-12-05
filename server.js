@@ -124,7 +124,17 @@ app.get('/eventsAmount/:user', (req, res) => {
     })
 })
 
-app.get('/calendar', (req, res) => {
+app.get('/notesAmount/:user', (req, res) => {
+    const username = req.params.user
+
+    notesModel.find({'username':username}, function(err, data){
+        if (err) return
+
+        console.log(data)
+        res.status(200).send(`${data.length}`)
+
+    })
+})
 
 app.post('/fillnotes', (req, res) => {
     const username = req.body

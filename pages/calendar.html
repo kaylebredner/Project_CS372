@@ -9,14 +9,15 @@
 
     <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css' rel='stylesheet' />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="./css/calendar.css" rel="stylesheet" />
-    <link href="./css/nav.css" rel="stylesheet" />
+    <link href="../css/calendar.css" rel="stylesheet" />
+    <link href="../css/nav.css" rel="stylesheet" />
     <link href="../css/notebook.css" rel="stylesheet">
 
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="./js/calendar.js"></script>
+    <script src="../js/calendar.js"></script>
+    <script src="../js/dashboard.js"></script>
 
     <script>
         init();
@@ -36,13 +37,13 @@
         <div class="container-fluid">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link active" href="/">Home</a>
+                    <a class="nav-link active" onclick="navHome()">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="/calendar">Calendar</a>
+                    <a class="nav-link active" onclick="navCalandar()">Calendar</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="/notes">Notebooks</a>
+                    <a class="nav-link active" onclick="navNotes()">Notebooks</a>
                 </li>
             </ul>
         </div>
