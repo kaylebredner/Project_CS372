@@ -105,6 +105,7 @@ export default class NotesApp {
 
                 this._saveNote(newNote)
                 this._refreshNotes()
+                location.reload()
             },
             onNoteEdit: (title, body) => {
                 this._saveNote({
@@ -114,6 +115,7 @@ export default class NotesApp {
                 })
 
                 this._refreshNotes()
+                location.reload()
             },
             onNoteDelete: noteId => {
                 this._deleteNote(noteId)
