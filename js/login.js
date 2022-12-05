@@ -2,7 +2,6 @@
  function login(){
     let userName = document.getElementById('user').value
     let password = document.getElementById('pass').value
-    console.log(`User: ${userName}, Password: ${password}`)
     let success
     $.ajax({
         url: '/login',
@@ -14,6 +13,7 @@
         success: function(data){
             document.getElementById('result').innerHTML=''
             success = true;
+            sessionStorage.setItem("planner-username", data)
             window.location.href = '/dashboard/'+userName
         },
         statusCode: {
@@ -23,7 +23,7 @@
             }
         }
     })
-    console.log(success)
+
     return false;
     
 }

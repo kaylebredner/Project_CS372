@@ -11,8 +11,10 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="./css/calendar.css" rel="stylesheet" />
     <link href="./css/nav.css" rel="stylesheet" />
+    <link href="../css/notebook.css" rel="stylesheet">
 
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.1/jquery.min.js" integrity="sha512-aVKKRRi/Q/YV+4mjoKBsE4x3H+BkegoM/em46NNlCqNTmUYADjBbeNefNxYV7giUp0VxICtqdrbqU7iVaeZNXA==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.1/dist/js/bootstrap.bundle.min.js"></script>
     <script src="./js/calendar.js"></script>
 
@@ -20,28 +22,27 @@
         init();
     </script>
 </head>
-<header class="d-flex flex-wrap justify-content-center border-bottom">
-    <div class="container-fluid">
-        <a class="navbar-brand" href="./">Logo</a>
-    </div>
-</header>
 
 <body>
-    <!--Nav bar-->
+    <header class="d-flex flex-wrap justify-content-center border-bottom">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">Logo</a>
+            <!-- After merging, change href to point to homepage.html -->
+        </div>
+    </header>
+
+    <!-- Main navigation bar with links to Calendar, Settings, etc -->
     <nav class="navbar navbar-expand-sm bg-primary navbar-dark" id="main_navbar">
         <div class="container-fluid">
             <ul class="navbar-nav">
                 <li class="nav-item">
-                    <a class="nav-link active" href="./">Home</a>
+                    <a class="nav-link active" href="/">Home</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="./calendar">Calendar</a>
+                    <a class="nav-link active" href="/calendar">Calendar</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="./notebook">Notebooks</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link active" href="./settings"">Settings</a>
+                    <a class="nav-link active" href="/notes">Notebooks</a>
                 </li>
             </ul>
         </div>
@@ -49,30 +50,27 @@
 
     <!--Assignment Bar, left.-->
     <div id='external-events'>
-        <p id="par">
-            <strong>Draggable Events</strong>
-            <img id="event-img" alt="add event button" src="./images/Img_Add_Notebook.png" onclick="eventMenu()" role="button" />
-        </p>
-        <div class='fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event'>
-            <div id="eventelement" class='fc-event-main'>My Event 1</div>
+        <div id="par">
+            <select class="form-select form-select-md calendar-selector" id="add-event-menu" name="event-menu"
+                onclick="toggleCheckBox()">
+                <option value="-1">[Create New Event]</option>
+                <option value="-4"></option>
+                <option value="-3">==Events==</option>
+                <option value="-2">==Notes==</option>
+            </select>
+            <img class="event-img" alt="add event button" src="../images/Img_Add_Notebook.png"
+                onclick="return appendEvent()" role="button" />
+            <img class="event-img" alt="add event button" src="../images/trashcan.png"
+                onclick="return deleteEventFromDB()" role="button" />
         </div>
-        <div class='fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event'>
-            <div id="eventelement" class='fc-event-main'>My Event 2</div>
-        </div>
-        <div class='fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event'>
-            <div id="eventelement" class='fc-event-main'>My Event 3</div>
-        </div>
-        <div class='fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event'>
-            <div id="eventelement" class='fc-event-main'>My Event 4</div>
-        </div>
-        <div class='fc-event fc-h-event fc-daygrid-event fc-daygrid-block-event'>
-            <div id="eventelement" class='fc-event-main'>My Event 5</div>
-        </div>           
+        <input class="form-check-input" type="checkbox" id="save-note-box" checked="false">
+        <label class="form-check-label">Save as new note?</label>
     </div>
-    
+
     <!--Calendar-->
-     <div id='calendar-container'>
-         <div id='calendar'></div>
-     </div>
+    <div id='calendar-container'>
+        <div id='calendar'></div>
+    </div>
 </body>
+
 </html>
