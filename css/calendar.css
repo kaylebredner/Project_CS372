@@ -10,14 +10,6 @@ div.calendar {
     height: 100%;
 }
 
-html,
-body {
-    margin: 0;
-    padding: 0;
-    font-family: Arial, Helvetica Neue, Helvetica, sans-serif;
-    font-size: 14px;
-}
-
 #external-events {
     float: left;
     width: 25%;
@@ -40,24 +32,58 @@ body {
 #par{
     padding-top:0.5em;
     padding-bottom:1em;
+    display:flex;
+    align-items: center;
+    align-content: center;
 }
 
-#event-img{
-    height:30px;
-    width:30px;
-    margin-right: 0.5em;
-    margin-top: 0.4em;
+.event-img{
+    height:7%;
+    width:7%;
     float:right;
     display:flex;
+    margin-left:3%;
+    margin-right:2%;
+}
+
+.option-img{
+    height:50%;
+    width:5%;
+    margin-bottom:2.5%;
+    display: inline-block;
+}
+
+.notes-img{
+    height:50%;
+    width:5%;
+    margin-left:-12%;
+    display: inline-block;
+}
+
+.option-img:hover{
+    cursor:pointer;
 }
 
 #event-img:hover{
     cursor: pointer;
 }
 
-#eventelement{
+.event-element{
+    width:90%;
     padding-top:1.8em;
     padding-left:1em;
+    display: inline-block;
+    overflow: hidden;
+}
+
+#event-container{
+    align-items: center;
+    align-content: center;
+}
+
+#add-event-menu{
+    display:flex;
+    width:100%;
 }
 
 .completed .fc-event-title{
@@ -79,4 +105,24 @@ body {
 
 .menuItem-close{
     background-color:rgb(128, 226, 128);
+}
+
+#save-note-box{
+    margin-left: 5px;
+}
+
+.form-check-input{
+    margin-right: 5px;
+    margin-bottom: 20px;
+    width: 20px;
+    height: 20px;
+}
+
+.form-check-label{
+    margin-top: 1px;
+    font-size: 18px;
+}
+
+.calendar-selector{
+    margin-left: 5px;
 }

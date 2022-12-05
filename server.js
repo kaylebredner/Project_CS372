@@ -5,6 +5,8 @@ const { reset } = require('nodemon');
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 const moment = require('moment');
+const dotenv = require('dotenv').config({ path: path.join(__dirname, '.env') });
+
 
 // Schema for Notes
 const noteSchema = new mongoose.Schema({
@@ -15,10 +17,12 @@ const noteSchema = new mongoose.Schema({
     updated: Date
 })
 
-mongoose.connect('mongodb+srv://alex:alex@cluster0.gr3zesx.mongodb.net/StudentPlanner')
-
 // Model for 'LoginInfo' table
 var userModel = mongoose.model('LoginInfo', new Schema({
+mongoose.connect(process.env.DATABASE)
+
+//model for 'LoginInfo' table
+const userModel = mongoose.model('LoginInfo', new Schema({
     userName: String,
     password: String,
     email: String,
@@ -26,7 +30,29 @@ var userModel = mongoose.model('LoginInfo', new Schema({
     authenticateTime: String
 }), 'LoginInfo');
 
+
 const NotesM = mongoose.model('Notes', noteSchema)
+
+
+const eventModel = mongoose.model('Events', new Schema({
+
+    username: String,
+    title: String,
+    start: String,
+    end: String,
+    isNote: Boolean
+}), 'Events');
+
+
+const notesModel = mongoose.model('notes', new Schema({
+    username: String,
+    id: Number,
+    title: String,
+    body: String,
+    updated: Date,
+}), 'notes');
+
+
 
 let app = express()
 
@@ -38,37 +64,45 @@ app.use(bodyParser.json())
 let authenticated = true;
 
 app.get('/', (req, res) => {
+    res.status(200).sendFile(path.join(__dirname, "/pages/login.html"))
+})
 
-    if (authenticated) {
-        res.status(200).sendFile(path.join(__dirname, "/pages/dashboard.html"))
-    }
-    else {
-        res.status(200).sendFile(path.join(__dirname, "/pages/login.html"))
-    }
+app.get('/dashboard/:userName', (req, res) => {
+    new Promise((resolve, reject) => {
+        resolve(isAuthenticated(req.params.userName));
+    }).then((value) => {
+        if (value) {
+            res.status(200).sendFile(path.join(__dirname, "/pages/dashboard.html"))
+        }
+        else {
+            res.status(200).sendFile(path.join(__dirname, "/pages/login.html"))
+        }
+    })
+
+
 })
 
 //create user in database from request data
 app.post('/signUp', (req, res) => {
     //create user object
     //storing the password as plain text is bad for security, but i'm going to do it anyway
-    let user = {}
+    const user = {}
     user.userName = req.body.user;
     user.password = req.body.pass;
     user.email = req.body.email;
-    user.authenticated = 0;
-    user.authenticateTime = '';
+    user.authenticated = 1;
+    user.authenticateTime = moment();
+    const url = '/' + user.userName
     userModel.find({ 'userName': req.body.user }, function (err, data) {
         if (err) return
         if (data.length === 0) {
             userModel.create(user)
-            res.status(200).redirect("/")
+            res.status(200).send(user.userName)
         }
         else {
-            res.status(200).send("User already exists");
+                    res.status(401).send("User already exists");
         }
     })
-    console.log(user);
-
 })
 
 // Retrieve list of notes from the DB and return to page
@@ -118,7 +152,6 @@ app.post('/delete_note', async function (req, res) {
 
 //finds user by username/email and checks password against what is stored in db, responds with user token, pass this token into other requests to ensure user is logged in
 app.post('/login', (req, res) => {
-    //console.log(req.body);
     const userName = req.body.user;
     const pw = req.body.pass;
     const now = moment()
@@ -127,36 +160,130 @@ app.post('/login', (req, res) => {
     userModel.findOne({ 'userName': userName }, function (err, user) {
         if (err) return
         if (pw === user.password) {
+
             authenticated = true;
             user.authenticated = 1;
             user.authenticateTime = now
             user.save();
-            isAuthenticated(user.userName)
-            res.status(200).redirect("/")
+
+            res.status(200).send(userName);
 
         }
         else {
-            console.log('incorrect password')
-            res.status(401).send("Incorrect Password");
+            res.status(401).send('incorrect password');
+
         }
     })
 })
 
-app.get('/calendar', (req, res) => {
 
-    if (authenticated) {
-        res.status(200).sendFile(path.join(__dirname, "/pages/calendar.html"))
-    } else {
-        res.status(200).redirect("/")
-    }
+app.get('/eventsAmount/:user', (req, res) => {
+    const username = req.params.user
+
+    eventModel.find({'username':username}, function(err, data){
+        if (err) return
+        let eventsLength = 0;
+        for(let i = 0; i < data.length; i++){
+            if(!data[i].isNote) length += 1
+        }
+        res.status(200).send(`${eventsLength}`)
+    })
 })
 
-app.get('/notes', (req, res) => {
-    if (authenticated) {
-        res.status(200).sendFile(path.join(__dirname, "/pages/notebook.html"))
-    } else {
-        res.status(200).redirect("/")
-    }
+app.get('/notesAmount/:user', (req, res) => {
+    const username = req.params.user
+
+    notesModel.find({'username':username}, function(err, data){
+        if (err) return
+
+        res.status(200).send(`${data.length}`)
+
+    })
+})
+
+app.post('/fillnotes', (req, res) => {
+    const username = req.body
+    notesModel.find({ "username": username }, (err, ent) => {
+        if (err) return
+        res.status(200).send(JSON.stringify(ent))
+    })
+})
+
+
+app.post('/fillevents', (req, res) => {
+    const username = req.body
+    eventModel.find({ "username": username }, (err, ent) => {
+        if (err) return
+        res.status(200).send(JSON.stringify(ent))
+    })
+})
+
+app.post('/createnoteevent', (req, res) => {
+    const request = JSON.parse(req.body)
+
+    notesModel.collection.insertOne({
+        username: request.username,
+        id: request.id,
+        title: request.title,
+        body: request.body,
+        updated: new Date(request.updated),
+    })
+})
+
+app.post('/createvent', (req, res) => {
+    const request = JSON.parse(req.body)
+    
+
+    eventModel.find({ "username": request.username }, (err, ent) => {
+        for(let i = 0; i < ent.length; i++){
+            
+            if(ent[i].username === request.username && ent[i].title === request.title){
+                eventModel.collection.findOneAndUpdate({"username":request.username, "title":request.title}, {$set:{"start": request.start, "end":request.end}})
+                return;
+            }
+        }
+
+        eventModel.collection.insertOne({
+            username: request.username,
+            title: request.title,
+            start: request.start,
+            end: request.end,
+            isNote: request.isnote
+        })
+    })
+})
+
+app.post('/deleteevent', (req, res) => {
+    const request = JSON.parse(req.body)
+
+    eventModel.collection.findOneAndDelete({"username":request.username, "title":request.title})
+})
+
+app.get('/calendar/:user', (req, res) => {
+    new Promise((resolve, reject)=> {
+        resolve(isAuthenticated(req.params.user));
+    }).then((value)=>{
+        if (value) {
+            res.status(200).sendFile(path.join(__dirname, "/pages/calendar.html"))
+        }
+        else {
+            res.status(401).sendFile(path.join(__dirname, "/pages/login.html"))
+        }
+    })
+})
+
+app.get('/notes/:user', (req, res) => {
+
+    new Promise((resolve, reject)=> {
+        resolve(isAuthenticated(req.params.user));
+    }).then((value)=>{
+        if (value) {
+            res.status(200).sendFile(path.join(__dirname, "/pages/notebook.html"))
+        }
+        else {
+            res.status(401).sendFile(path.join(__dirname, "/pages/login.html"))
+        }
+    })
 })
 
 app.get('/signup', (req, res) => {
@@ -173,25 +300,25 @@ app.post('/', (req, res) => {
 
 })
 
-function isAuthenticated(user) {
-    userModel.findOne({ 'userName': user }, function (err, user) {
-        if (err) return false
-        if (user.authenticated === 1) {
-            //ensure the user was authenticated at most 1 hour ago
-            const authTime = moment(user.authenticateTime);
+
+//takes the user name then determines if the user is authenticated or not
+async function isAuthenticated(user) {
+    let userData = await userModel.findOne({ 'userName': user })
+    if (userData != null) {
+        if (userData.authenticated === 1) {
+            const authTime = moment(userData.authenticateTime);
             const now = moment()
             if (now.isSameOrBefore(authTime.add(1, 'h'))) {
-                //if authenticated less than 1 hour ago, refresh authenticate time, then return true
-                user.authenticateTime = now
-                user.save()
-                return true
+                userModel.findOne({ 'userName': user }, function (err, data) {
+
+                })
+                //somehow need to refresh auth time here so the user isn't required to log back in after an hour
+                return true;
             }
-            return false
         }
-        else {
-            return false
-        }
-    })
+        return false
+    }
+    return false;
 }
 
 
